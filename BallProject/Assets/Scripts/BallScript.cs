@@ -4,24 +4,25 @@ using UnityEngine;
 using UnityEngine.UI;
 public class BallScript : MonoBehaviour
 {
-    public GameObject cameraobject;
-    Vector3 startforce;
-    Rigidbody rigidbody1;
+   
+    public float BallLifetime;
+    GameObject cameraobject;
+    Rigidbody rigidbodyball;
     // Start is called before the first frame update
     void Start()
     {
-        Vector3 offset = new Vector3(0, 2f, 0);
-        rigidbody1 = GetComponent<Rigidbody>();
-        this.gameObject.transform.position = cameraobject.transform.position + offset;
-    }
+        cameraobject = FindObjectOfType<Camera>().gameObject;
 
+        rigidbodyball = this.GetComponent<Rigidbody>();
+        rigidbodyball.AddForce(cameraobject.transform.forward * 2, ForceMode.Impulse);
+    }
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if (Input.touchCount > 0)
+        BallLifetime = BallLifetime - Time.deltaTime;
+        if(BallLifetime <=0)
         {
-            rigidbody1.constraints = RigidbodyConstraints.None;
-            rigidbody1.AddForce(Vector3.forward, ForceMode.Impulse);
+            Destroy(this.gameObject);
         }
     }
 }
